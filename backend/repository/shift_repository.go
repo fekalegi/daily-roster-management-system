@@ -49,3 +49,27 @@ func (r *shiftRepository) GetByID(id int) (*model.Shift, error) {
 	}
 	return &s, nil
 }
+
+func (r *shiftRepository) GetUnassignedShift() ([]model.Shift, error) {
+	rows, err := r.DB.Query(`
+SELECT s.*
+FROM shifts s
+LEFT JOIN assignments a ON s.id = a.shift_id
+WHERE a.shift_id IS NULL;
+`)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var shifts []model.Shift
+	for rows.Next() {
+		var s model.Shift
+		if err := rows.Scan(&s.ID, &s.Date, &s.StartTime, &s.EndTime, &s.Role, &s.Location); err != nil {
+			return nil, err
+		}
+		shifts = append(shifts, s)
+	}
+
+	return shifts, nil
+}

@@ -39,3 +39,12 @@ func (h *ShiftHandler) CreateShift(c *gin.Context) {
 
 	response.Created(c, shift)
 }
+
+func (h *ShiftHandler) GetUnassigned(c *gin.Context) {
+	shifts, err := h.Usecase.GetUnassignedShift()
+	if err != nil {
+		response.Error(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+	response.JSON(c, http.StatusOK, shifts)
+}

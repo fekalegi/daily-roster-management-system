@@ -23,6 +23,7 @@ type ShiftRepository interface {
 	GetAll() ([]model.Shift, error)
 	Create(shift *model.Shift) error
 	GetByID(id int) (*model.Shift, error)
+	GetUnassignedShift() ([]model.Shift, error)
 }
 
 type ShiftRequestRepository interface {
@@ -31,5 +32,6 @@ type ShiftRequestRepository interface {
 	UpdateStatus(id int, status string) error
 	GetByID(id int) (*model.ShiftRequest, error)
 	GetPendingWithDetails() ([]model.ShiftRequestDetail, error)
-	GetPastWithDetails() ([]model.ShiftRequestDetail, error)
+	GetWithDetails() ([]model.ShiftRequestDetail, error)
+	GetWithDetailsFilterStatus(status string) ([]model.ShiftRequestDetail, error)
 }

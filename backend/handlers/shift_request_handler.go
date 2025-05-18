@@ -57,3 +57,27 @@ func (h *ShiftRequestHandler) Reject(c *gin.Context) {
 	}
 	response.JSON(c, http.StatusOK, nil)
 }
+
+func (h *ShiftRequestHandler) List(c *gin.Context) {
+	status := c.Query("status")
+
+	var results []model.ShiftRequestDetail
+	var err error
+
+	if status != "" {
+		results, err = h.Usecase.GetByStatus(status)
+	} else {
+		results, err = h.Usecase.GetAll()
+	}
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error_message": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"code":   200,
+		"status": "success",
+		"data":   results,
+	})
+}

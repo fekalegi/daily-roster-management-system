@@ -46,9 +46,11 @@ func main() {
 	admin.Use(middleware.AdminOnlyMiddleware())
 	admin.POST("/shifts", shiftHandler.CreateShift)
 	r.GET("/shifts", shiftHandler.GetShifts)
+	r.GET("/shifts/unassigned", shiftHandler.GetUnassigned)
 
 	r.POST("/requests", shiftRequestHandler.Create)
 	r.GET("/requests/pending", shiftRequestHandler.ListPending)
+	r.GET("/requests", shiftRequestHandler.List)
 	admin.PUT("/requests/:id/approve", shiftRequestHandler.Approve)
 	admin.PUT("/requests/:id/reject", shiftRequestHandler.Reject)
 

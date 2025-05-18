@@ -7,21 +7,23 @@
 	// your existing code...
 	let allRequests = [];
 	let requests = [];
-	let filter = { worker: '', date: '' };
+	let filter = { worker: '', date: '', status: '' };
 	let error = '';
 	let success = '';
 	let loading = true;
 
 	async function loadData() {
 		try {
-			const res = await apiGet<{ data: any[] }>('/requests/pending');
-			allRequests = res.data ?? [];
-			applyFilter();
-		} catch (err) {
-			error = err.message;
-		} finally {
-			loading = false;
-		}
+		let query = '?';
+		if (filter.status) query += `status=${filter.status}`;
+		const res = await apiGet<{ data: any[] }>(`/requests${query}`);
+		allRequests = res.data ?? [];
+		applyFilter();
+	} catch (err) {
+		error = err.message;
+	} finally {
+		loading = false;
+	}
 	}
 
 	function applyFilter() {
@@ -77,6 +79,16 @@
 			bind:value={filter.date}
 			on:input={applyFilter}
 		/>
+		<select
+			class="select select-bordered w-48"
+			bind:value={filter.status}
+			on:change={loadData}
+		>
+			<option value="">All Statuses</option>
+			<option value="pending">Pending</option>
+			<option value="approved">Approved</option>
+			<option value="rejected">Rejected</option>
+		</select>
 	</div>
 
 	{#if loading}
@@ -108,22 +120,36 @@
           <td class="px-4 py-3 text-gray-300">{req.shift.role}</td>
           <td class="px-4 py-3 text-gray-300">{req.shift.location}</td>
           <td class="px-4 py-3">
-            <span class="badge bg-yellow-500 text-gray-800 font-mono">{req.status}</span>
+            <span
+				class="badge font-mono px-3 py-1 rounded text-sm"
+				class:bg-yellow-500={req.status === 'pending'}
+				class:text-gray-800={req.status === 'pending'}
+				class:bg-green-500={req.status === 'approved'}
+				class:text-white={req.status === 'approved'}
+				class:bg-red-500={req.status === 'rejected'}
+			>
+				{req.status}
+			</span>
+
           </td>
-          <td class="px-4 py-3 flex justify-center gap-2">
-            <button
-              class="btn btn-sm btn-outline border-green-500 text-green-400 hover:bg-green-600 hover:text-white"
-              on:click={() => handleAction(req.id, 'approve')}
-            >
-              Approve
-            </button>
-            <button
-              class="btn btn-sm btn-outline border-red-500 text-red-400 hover:bg-red-600 hover:text-white"
-              on:click={() => handleAction(req.id, 'reject')}
-            >
-              Reject
-            </button>
-          </td>
+          <td class="px-4 py-3">
+			{#if req.status === 'pending'}
+				<div class="flex justify-center gap-2">
+				<button
+					class="btn btn-sm btn-outline border-green-500 text-green-400 hover:bg-green-600 hover:text-white"
+					on:click={() => handleAction(req.id, 'approve')}
+				>
+					Approve
+				</button>
+				<button
+					class="btn btn-sm btn-outline border-red-500 text-red-400 hover:bg-red-600 hover:text-white"
+					on:click={() => handleAction(req.id, 'reject')}
+				>
+					Reject
+				</button>
+				</div>
+			{/if}
+			</td>
         </tr>
       {/each}
     </tbody>

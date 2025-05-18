@@ -8,6 +8,7 @@ import (
 type ShiftUsecase interface {
 	GetShifts() ([]model.Shift, error)
 	CreateShift(shift *model.Shift) error
+	GetUnassignedShift() ([]model.Shift, error)
 }
 
 type shiftUsecase struct {
@@ -24,4 +25,8 @@ func (u *shiftUsecase) GetShifts() ([]model.Shift, error) {
 
 func (u *shiftUsecase) CreateShift(shift *model.Shift) error {
 	return u.repo.Create(shift)
+}
+
+func (u *shiftUsecase) GetUnassignedShift() ([]model.Shift, error) {
+	return u.repo.GetUnassignedShift()
 }

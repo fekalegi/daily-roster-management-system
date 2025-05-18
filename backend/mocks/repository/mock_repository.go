@@ -258,6 +258,21 @@ func (mr *MockShiftRepositoryMockRecorder) GetByID(id interface{}) *gomock.Call 
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetByID", reflect.TypeOf((*MockShiftRepository)(nil).GetByID), id)
 }
 
+// GetUnassignedShift mocks base method.
+func (m *MockShiftRepository) GetUnassignedShift() ([]model.Shift, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetUnassignedShift")
+	ret0, _ := ret[0].([]model.Shift)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetUnassignedShift indicates an expected call of GetUnassignedShift.
+func (mr *MockShiftRepositoryMockRecorder) GetUnassignedShift() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUnassignedShift", reflect.TypeOf((*MockShiftRepository)(nil).GetUnassignedShift))
+}
+
 // MockShiftRequestRepository is a mock of ShiftRequestRepository interface.
 type MockShiftRequestRepository struct {
 	ctrl     *gomock.Controller
@@ -310,21 +325,6 @@ func (mr *MockShiftRequestRepositoryMockRecorder) GetByID(id interface{}) *gomoc
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetByID", reflect.TypeOf((*MockShiftRequestRepository)(nil).GetByID), id)
 }
 
-// GetPastWithDetails mocks base method.
-func (m *MockShiftRequestRepository) GetPastWithDetails() ([]model.ShiftRequestDetail, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetPastWithDetails")
-	ret0, _ := ret[0].([]model.ShiftRequestDetail)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// GetPastWithDetails indicates an expected call of GetPastWithDetails.
-func (mr *MockShiftRequestRepositoryMockRecorder) GetPastWithDetails() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPastWithDetails", reflect.TypeOf((*MockShiftRequestRepository)(nil).GetPastWithDetails))
-}
-
 // GetPending mocks base method.
 func (m *MockShiftRequestRepository) GetPending() ([]model.ShiftRequest, error) {
 	m.ctrl.T.Helper()
@@ -353,6 +353,36 @@ func (m *MockShiftRequestRepository) GetPendingWithDetails() ([]model.ShiftReque
 func (mr *MockShiftRequestRepositoryMockRecorder) GetPendingWithDetails() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPendingWithDetails", reflect.TypeOf((*MockShiftRequestRepository)(nil).GetPendingWithDetails))
+}
+
+// GetWithDetails mocks base method.
+func (m *MockShiftRequestRepository) GetWithDetails() ([]model.ShiftRequestDetail, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetWithDetails")
+	ret0, _ := ret[0].([]model.ShiftRequestDetail)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetWithDetails indicates an expected call of GetWithDetails.
+func (mr *MockShiftRequestRepositoryMockRecorder) GetWithDetails() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetWithDetails", reflect.TypeOf((*MockShiftRequestRepository)(nil).GetWithDetails))
+}
+
+// GetWithDetailsFilterStatus mocks base method.
+func (m *MockShiftRequestRepository) GetWithDetailsFilterStatus(status string) ([]model.ShiftRequestDetail, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetWithDetailsFilterStatus", status)
+	ret0, _ := ret[0].([]model.ShiftRequestDetail)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetWithDetailsFilterStatus indicates an expected call of GetWithDetailsFilterStatus.
+func (mr *MockShiftRequestRepositoryMockRecorder) GetWithDetailsFilterStatus(status interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetWithDetailsFilterStatus", reflect.TypeOf((*MockShiftRequestRepository)(nil).GetWithDetailsFilterStatus), status)
 }
 
 // UpdateStatus mocks base method.

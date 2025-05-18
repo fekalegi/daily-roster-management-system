@@ -13,6 +13,8 @@ type ShiftRequestUsecase interface {
 	GetPendingRequests() ([]model.ShiftRequestDetail, error)
 	Approve(id int) error
 	Reject(id int) error
+	GetByStatus(status string) ([]model.ShiftRequestDetail, error)
+	GetAll() ([]model.ShiftRequestDetail, error)
 }
 
 type shiftRequestUsecase struct {
@@ -76,7 +78,7 @@ func (u *shiftRequestUsecase) Reject(id int) error {
 	if err != nil {
 		return err
 	}
-	
+
 	if req.Status != "pending" {
 		return errors.New("shift request is not pending")
 	}
@@ -126,4 +128,12 @@ func (u *shiftRequestUsecase) checkShiftRequest(req *model.ShiftRequest, shift *
 		return fmt.Errorf("worker already has 5 shifts this week")
 	}
 	return nil
+}
+
+func (u *shiftRequestUsecase) GetByStatus(status string) ([]model.ShiftRequestDetail, error) {
+	return u.repo.GetWithDetailsFilterStatus(status)
+}
+
+func (u *shiftRequestUsecase) GetAll() ([]model.ShiftRequestDetail, error) {
+	return u.repo.GetWithDetails()
 }

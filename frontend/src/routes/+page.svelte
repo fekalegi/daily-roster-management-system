@@ -46,18 +46,23 @@
       <a href="/requests" class="block px-6 py-4 text-white font-semibold hover:bg-indigo-600 transition-colors">Request a Shift</a>
     </li>
     <li class="bg-gray-800">
-      <a href="/requests/pending" class="block px-6 py-4 text-white font-semibold hover:bg-indigo-600 transition-colors">View Pending Requests</a>
+      <a href="/requests/list" class="block px-6 py-4 text-white font-semibold hover:bg-indigo-600 transition-colors">View Shift Requests</a>
     </li>
     <li class="bg-gray-700">
       <a href="/assignments" class="block px-6 py-4 text-white font-semibold hover:bg-indigo-600 transition-colors">View Assigned Shifts</a>
     </li>
+<li class="bg-gray-800">
+  <a href="/shifts/available" class="block px-6 py-4 text-white font-semibold hover:bg-indigo-600 transition-colors">
+    View Available Shifts
+  </a>
+</li>
     {#if isAdmin}
-  <li class="bg-gray-800">
+  <li class="bg-gray-700">
     <a href="/shifts/create" class="block px-6 py-4 text-white font-semibold hover:bg-indigo-600 transition-colors">
       Create Shifts
     </a>
   </li>
-  <li class="bg-gray-700">
+  <li class="bg-gray-800">
     <a href="/assignments/create" class="block px-6 py-4 text-white font-semibold hover:bg-indigo-600 transition-colors">
       Assign Worker
     </a>

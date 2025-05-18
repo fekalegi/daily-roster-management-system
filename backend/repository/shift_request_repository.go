@@ -92,7 +92,7 @@ func (r *shiftRequestRepository) GetPendingWithDetails() ([]model.ShiftRequestDe
 	return results, nil
 }
 
-func (r *shiftRequestRepository) GetPastWithDetails() ([]model.ShiftRequestDetail, error) {
+func (r *shiftRequestRepository) GetWithDetails() ([]model.ShiftRequestDetail, error) {
 	query := `
         SELECT 
             sr.id, sr.status,
@@ -101,9 +101,45 @@ func (r *shiftRequestRepository) GetPastWithDetails() ([]model.ShiftRequestDetai
         FROM shift_requests sr
         JOIN workers w ON sr.worker_id = w.id
         JOIN shifts s ON sr.shift_id = s.id
-        WHERE sr.status != 'pending'
     `
 	rows, err := r.DB.Query(query)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var results []model.ShiftRequestDetail
+	for rows.Next() {
+		detail := model.ShiftRequestDetail{
+			Worker: &model.Worker{},
+			Shift:  &model.Shift{},
+		}
+		if err := rows.Scan(
+			&detail.ID, &detail.Status,
+			&detail.Worker.ID, &detail.Worker.Name,
+			&detail.Shift.ID, &detail.Shift.Date, &detail.Shift.StartTime, &detail.Shift.EndTime,
+			&detail.Shift.Role, &detail.Shift.Location,
+		); err != nil {
+			return nil, err
+		}
+		results = append(results, detail)
+	}
+
+	return results, nil
+}
+
+func (r *shiftRequestRepository) GetWithDetailsFilterStatus(status string) ([]model.ShiftRequestDetail, error) {
+	query := `
+        SELECT 
+            sr.id, sr.status,
+            w.id, w.name,
+            s.id, s.date, s.start_time, s.end_time, s.role, s.location
+        FROM shift_requests sr
+        JOIN workers w ON sr.worker_id = w.id
+        JOIN shifts s ON sr.shift_id = s.id
+        WHERE status = ?
+    `
+	rows, err := r.DB.Query(query, status)
 	if err != nil {
 		return nil, err
 	}
