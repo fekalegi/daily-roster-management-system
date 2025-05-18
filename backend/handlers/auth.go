@@ -33,7 +33,7 @@ func (h *AuthHandler) Login(c *gin.Context) {
 	}
 
 	// Validate user credentials (you implement this)
-	roleId, err := h.userUsecase.ValidateCredentials(req.Username, req.Password)
+	user, err := h.userUsecase.ValidateCredentials(req.Username, req.Password)
 	if err != nil {
 		response.Error(c, http.StatusUnauthorized, "invalid credentials")
 		return
@@ -41,8 +41,8 @@ func (h *AuthHandler) Login(c *gin.Context) {
 
 	// Create JWT token
 	claims := jwt.MapClaims{
-		"role_id": roleId,
-		"exp":     time.Now().Add(24 * time.Hour).Unix(),
+		"user": user,
+		"exp":  time.Now().Add(24 * time.Hour).Unix(),
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
@@ -52,7 +52,7 @@ func (h *AuthHandler) Login(c *gin.Context) {
 		return
 	}
 
-	response.JSON(c, http.StatusOK, map[string]interface{}{"access_token": tokenString, "role_id": roleId})
+	response.JSON(c, http.StatusOK, map[string]interface{}{"access_token": tokenString, "user": user})
 }
 
 func (h *AuthHandler) VerifyToken(c *gin.Context) {
@@ -80,11 +80,11 @@ func (h *AuthHandler) VerifyToken(c *gin.Context) {
 		response.Error(c, http.StatusUnauthorized, "Invalid or expired token")
 		return
 	}
-	roleId, ok := claims["role_id"]
+	user, ok := claims["user"]
 	if !ok {
 		response.Error(c, http.StatusUnauthorized, "Invalid token")
 		return
 	}
-	response.JSON(c, http.StatusOK, map[string]interface{}{"role_id": roleId})
+	response.JSON(c, http.StatusOK, map[string]interface{}{"user": user})
 	return
 }

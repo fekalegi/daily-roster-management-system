@@ -3,9 +3,11 @@ package main
 import (
 	"daily-worker-roster-management-system/db"
 	handler "daily-worker-roster-management-system/handlers"
+	"daily-worker-roster-management-system/middleware"
 	"daily-worker-roster-management-system/repository"
 	"daily-worker-roster-management-system/usecase"
 	"github.com/gin-gonic/gin"
+	"os"
 )
 
 func main() {
@@ -16,33 +18,41 @@ func main() {
 	shiftRepo := repository.NewShiftRepository(database)
 	shiftRequestRepo := repository.NewShiftRequestRepository(database)
 	assignmentRepo := repository.NewAssignmentRepository(database)
+	workerRepo := repository.NewWorkerRequestRepository(database)
 
 	shiftUsecase := usecase.NewShiftUsecase(shiftRepo)
-	userUsecase := usecase.NewUserUsecase()
+	userUsecase := usecase.NewUserUsecase(workerRepo)
 	shiftRequestUsecase := usecase.NewShiftRequestUsecase(shiftRequestRepo, shiftRepo, assignmentRepo)
 	assignmentUsecase := usecase.NewAssignmentUsecase(assignmentRepo)
 
 	shiftHandler := handler.NewShiftHandler(shiftUsecase)
 	shiftRequestHandler := handler.NewShiftRequestHandler(shiftRequestUsecase)
 	assignmentHandler := handler.NewAssignmentHandler(assignmentUsecase)
-	authHandler := handler.NewAuthHandler(userUsecase, []byte("your-very-secret-key"))
+	secretJwt := os.Getenv("JWT_SECRET")
+	authHandler := handler.NewAuthHandler(userUsecase, []byte(secretJwt))
 
 	r := gin.Default()
 	r.Use(CORSMiddleware())
-	r.GET("/shifts", shiftHandler.GetShifts)
-	r.POST("/shifts", shiftHandler.CreateShift)
-
-	r.POST("/requests", shiftRequestHandler.Create)
-	r.GET("/requests/pending", shiftRequestHandler.ListPending)
-	r.PUT("/requests/:id/approve", shiftRequestHandler.Approve)
-	r.PUT("/requests/:id/reject", shiftRequestHandler.Reject)
-
-	r.POST("/assignments", assignmentHandler.Create)
-	r.GET("/assignments", assignmentHandler.Get)
 
 	r.POST("/auth/login", authHandler.Login)
 	r.GET("/auth/verify", authHandler.VerifyToken)
 
+	r.Use(middleware.JWTAuthMiddleware([]byte(secretJwt)))
+	// Admin-only routes
+
+	admin := r.Group("/")
+	admin.Use(middleware.AdminOnlyMiddleware())
+	admin.POST("/shifts", shiftHandler.CreateShift)
+	r.GET("/shifts", shiftHandler.GetShifts)
+
+	r.POST("/requests", shiftRequestHandler.Create)
+	r.GET("/requests/pending", shiftRequestHandler.ListPending)
+	admin.PUT("/requests/:id/approve", shiftRequestHandler.Approve)
+	admin.PUT("/requests/:id/reject", shiftRequestHandler.Reject)
+
+	r.GET("/assignments", assignmentHandler.Get)
+	admin.POST("/assignments", assignmentHandler.Create)
+	
 	r.Run(":9400")
 }
 

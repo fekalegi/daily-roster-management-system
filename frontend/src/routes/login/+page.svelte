@@ -51,7 +51,7 @@
 		<Toast message={success} type="success" onClose={clearSuccess} />
 	{/if}
 
-<div class="min-h-screen bg-gradient-to-r from-purple-900 via-purple-900 to-pink-900 flex flex-col justify-center items-center px-6 py-12">
+<div class="min-h-screen bg-gradient-to-r from-gray-900 via-purple-900 to-gray-900 flex flex-col justify-center items-center px-6 py-12">
   <div class="bg-white rounded-lg shadow-lg p-8 max-w-md w-full">
     <h2 class="text-3xl font-extrabold text-gray-900 mb-6 text-center">Sign in to your account</h2>
     <form class="space-y-6" on:submit|preventDefault={handleLogin}>
