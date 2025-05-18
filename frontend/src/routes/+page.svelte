@@ -57,6 +57,11 @@
       Create Shifts
     </a>
   </li>
+  <li class="bg-gray-700">
+    <a href="/assignments/create" class="block px-6 py-4 text-white font-semibold hover:bg-indigo-600 transition-colors">
+      Assign Worker
+    </a>
+  </li>
 {/if}
   </ul>
 </nav>

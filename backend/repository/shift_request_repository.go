@@ -5,15 +5,6 @@ import (
 	"database/sql"
 )
 
-type ShiftRequestRepository interface {
-	Create(req *model.ShiftRequest) error
-	GetPending() ([]model.ShiftRequest, error)
-	UpdateStatus(id int, status string) error
-	GetByID(id int) (*model.ShiftRequest, error)
-	GetPendingWithDetails() ([]model.ShiftRequestDetail, error)
-	GetPastWithDetails() ([]model.ShiftRequestDetail, error)
-}
-
 type shiftRequestRepository struct {
 	DB *sql.DB
 }

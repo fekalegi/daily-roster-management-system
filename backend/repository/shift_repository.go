@@ -13,12 +13,6 @@ func NewShiftRepository(db *sql.DB) ShiftRepository {
 	return &shiftRepository{DB: db}
 }
 
-type ShiftRepository interface {
-	GetAll() ([]model.Shift, error)
-	Create(shift *model.Shift) error
-	GetByID(id int) (*model.Shift, error)
-}
-
 func (r *shiftRepository) GetAll() ([]model.Shift, error) {
 	rows, err := r.DB.Query("SELECT id, date, start_time, end_time, role, location FROM shifts")
 	if err != nil {

@@ -5,16 +5,6 @@ import (
 	"database/sql"
 )
 
-type AssignmentRepository interface {
-	Create(a *model.Assignment) error
-	FindByWorkerID(workerID int) ([]model.AssignmentDetail, error)
-	FindByDate(date string) ([]model.AssignmentDetail, error)
-	CountAssignmentsInWeek(workerID int, weekStart string, weekEnd string) (int, error)
-	HasAssignmentOnDay(workerID int, date string) (bool, error)
-	IsShiftAlreadyAssigned(shiftID int) (bool, error)
-	FindAll() ([]model.AssignmentDetail, error)
-}
-
 type assignmentRepository struct {
 	DB *sql.DB
 }

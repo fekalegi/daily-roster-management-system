@@ -6,13 +6,14 @@
 
 	let shifts = [];
 	let selectedShiftId: number | null = null;
-	let workerId = 1;
+	let workerId = 0;
 	let success = '';
 	let error = '';
 
 	onMount(async () => {
 		const res = await apiGet<{ data: any[] }>('/shifts');
 		shifts = res.data;
+		workerId = localStorage.getItem('worker_id');
 	});
 
 	async function submitRequest() {
@@ -65,6 +66,7 @@
 			type="number"
 			bind:value={workerId}
 			min="1"
+			disabled
 			class="w-full rounded-md px-3 py-2 bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
 		/>
 	</div>

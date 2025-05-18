@@ -23,11 +23,13 @@ func main() {
 	shiftUsecase := usecase.NewShiftUsecase(shiftRepo)
 	userUsecase := usecase.NewUserUsecase(workerRepo)
 	shiftRequestUsecase := usecase.NewShiftRequestUsecase(shiftRequestRepo, shiftRepo, assignmentRepo)
-	assignmentUsecase := usecase.NewAssignmentUsecase(assignmentRepo)
+	assignmentUsecase := usecase.NewAssignmentUsecase(assignmentRepo, shiftRepo)
+	workerUsecase := usecase.NewWorkerUsecase(workerRepo)
 
 	shiftHandler := handler.NewShiftHandler(shiftUsecase)
 	shiftRequestHandler := handler.NewShiftRequestHandler(shiftRequestUsecase)
 	assignmentHandler := handler.NewAssignmentHandler(assignmentUsecase)
+	workerHandler := handler.NewWorkerHandler(workerUsecase)
 	secretJwt := os.Getenv("JWT_SECRET")
 	authHandler := handler.NewAuthHandler(userUsecase, []byte(secretJwt))
 
@@ -52,7 +54,9 @@ func main() {
 
 	r.GET("/assignments", assignmentHandler.Get)
 	admin.POST("/assignments", assignmentHandler.Create)
-	
+
+	admin.GET("/workers", workerHandler.GetAll)
+
 	r.Run(":9400")
 }
 

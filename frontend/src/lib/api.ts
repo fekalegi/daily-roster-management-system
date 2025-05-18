@@ -51,9 +51,11 @@ export async function apiGetAuth(path: string) {
 
 	const response = await res.json();
 	const role_id = response?.data?.user?.role_id;
+	const worker_id = response?.data?.user?.user_id;
 
 	if (role_id) {
 		localStorage.setItem('role_id', role_id);
+		localStorage.setItem('worker_id', worker_id);
 	}
 
 	return response;
