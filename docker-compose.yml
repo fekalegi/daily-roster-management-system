@@ -1,0 +1,16 @@
+version: "3.8"
+
+services:
+  backend:
+    build:
+      context: ./backend
+    container_name: dailyworker-backend
+    ports:
+      - "9400:9400"
+    volumes:
+      - sqlite_data:/app/roster_data   # <-- This volume persists the SQLite DB here
+    environment:
+      - DB_PATH=roster_data/roster.db  # (optional) pass env var if you want
+
+volumes:
+  sqlite_data:
